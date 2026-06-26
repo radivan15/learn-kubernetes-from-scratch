@@ -10,7 +10,7 @@ This repo documents a hands-on Kubernetes learning journey, from core concepts t
 |---|---|
 | Local cluster | k3d (k3s running inside Docker) |
 | Container runtime | Docker Desktop |
-| Local container registry | Docker Hub |
+| Local container registry | k3d registry (`k3d registry create`) |
 | Cloud cluster | AWS EKS |
 | Cloud registry | AWS ECR (public repo — 50 GB/month free) |
 | App | Python (FastAPI) |
@@ -22,17 +22,20 @@ This repo documents a hands-on Kubernetes learning journey, from core concepts t
 
 ## Learning Roadmap
 
-### Phase 1 — Kubernetes Local: Core Concepts `[LOCAL]` ✅
+### Phase 1 — Kubernetes Local: Core Concepts `[LOCAL]`
 > Understand core Kubernetes with hands-on practice
 
-- [x] Install k3d and create a local cluster
-- [x] Verify: `kubectl cluster-info` & `kubectl get nodes`
-- [x] Pod, Node, Cluster — difference from plain Docker containers
-- [x] First YAML manifest: deploy a simple Pod
-- [x] Deployment & ReplicaSet
-- [x] Service — ClusterIP, NodePort, LoadBalancer
-- [x] Namespace — isolate dev/staging environments
-- [x] ConfigMap & Secret
+- [ ] Install k3d and create a local cluster
+- [ ] Verify: `kubectl cluster-info` & `kubectl get nodes`
+- [ ] Pod, Node, Cluster — difference from plain Docker containers
+- [ ] First YAML manifest: deploy a simple Pod
+- [ ] Labels & Selectors — the glue that connects Deployment → Pod → Service
+- [ ] Deployment & ReplicaSet
+- [ ] Rolling Update & Rollback — `kubectl rollout status`, `kubectl rollout undo`
+- [ ] Service — ClusterIP, NodePort, LoadBalancer
+- [ ] Namespace — isolate dev/staging environments
+- [ ] ConfigMap & Secret
+- [ ] kubectl debugging — `logs`, `describe`, `exec`, `get events`
 
 **Checkpoint**: nginx on local Kubernetes — Deployment + Service + ConfigMap + Secret
 
@@ -48,14 +51,15 @@ containers.
 ### Phase 2 — Kubernetes Local: Intermediate `[LOCAL]`
 > Storage, health checks, autoscaling, observability
 
-- [x] Persistent Volume & PVC
-- [x] Startup, liveness & readiness probe
-- [x] Resource requests & limits
-- [x] Ingress + Nginx Ingress Controller
-- [ ] In-cluster DNS
-- [x] Horizontal Pod Autoscaler (HPA)
+- [ ] Persistent Volume & PVC
+- [ ] Startup, liveness & readiness probe
+- [ ] Resource requests & limits
+- [ ] Ingress + Nginx Ingress Controller
+- [ ] Horizontal Pod Autoscaler (HPA)
+- [ ] Job & CronJob — batch tasks, scheduled cleanup (the Kubernetes equivalent of Linux cron)
+- [ ] DaemonSet — run one Pod per node (how logging/monitoring agents are deployed)
 - [ ] StatefulSet — PostgreSQL with automatic PVC
-- [x] Metrics Server & `kubectl top`
+- [ ] Metrics Server & `kubectl top`
 
 **Checkpoint**: Full local stack — PostgreSQL (StatefulSet) + Ingress + HPA + health checks + resource limits
 
@@ -82,6 +86,8 @@ containers.
 
 ### Phase 4 — AWS EKS `[CLOUD — PAID]`
 > Deploy a production-grade cluster in the cloud
+>
+> Note: using `eksctl` here to understand what gets created. In Phase 6, all of this will be codified with Terraform.
 
 - [ ] EKS vs self-managed Kubernetes — what AWS manages vs what you manage
 - [ ] Create EKS cluster with `eksctl` — node type `t3.small`
@@ -89,7 +95,7 @@ containers.
 - [ ] AWS Load Balancer Controller
 - [ ] ECR — build, push & pull images (use public repo to avoid costs)
 - [ ] EBS CSI Driver — persistent storage (default StorageClass: GP3)
-- [ ] Karpenter — AWS-recommended autoscaler (faster than Cluster Autoscaler)
+- [ ] Cluster Autoscaler — scale nodes based on pending Pods (Karpenter is the next-level alternative, learn later)
 - [ ] Secrets Manager + External Secrets Operator
 
 **Checkpoint**: Full FastAPI stack on EKS with ECR + ALB + EBS
@@ -103,8 +109,8 @@ containers.
 
 - [ ] GitHub Actions — auto build & push to ECR on git push
 - [ ] CD pipeline to EKS via GitHub Actions
-- [ ] ArgoCD — GitOps: cluster auto-syncs from Git
 - [ ] Multi-environment pipeline (dev/staging/prod)
+- [ ] (Bonus) ArgoCD — GitOps: cluster auto-syncs from Git
 
 **Checkpoint**: Push code → build image → deploy automatically
 
