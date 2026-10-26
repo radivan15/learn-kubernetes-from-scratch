@@ -9,8 +9,8 @@ Phases 0–6 run entirely on a local k3d cluster (free). All paid AWS work is gr
 - [x] k3d config file (`k3d cluster create --config`) — 1 server + 2 agents, Traefik disabled, API on `127.0.0.1`, pinned k3s version
 - [x] Add the local registry to the k3d config (`dev-registry.localhost:5000`)
 - [x] Verify: `kubectl cluster-info` & `kubectl get nodes` (3 nodes Ready)
-- [ ] Pick a sample app image (`traefik/whoami`, pinned tag) — the real app lives in a separate repo, this repo is infra only
-- [ ] Re-tag and push the image to the k3d registry (`docker pull` → `docker tag` → `docker push`) and confirm the cluster can pull it (first Pod `Running`, reached via `kubectl port-forward`)
+- [x] Pick a sample app image (`traefik/whoami`, pinned tag) — the real app lives in a separate repo, this repo is infra only
+- [x] Re-tag and push the image to the k3d registry (`docker pull` → `docker tag` → `docker push`) and confirm the cluster can pull it (first Pod `Running`, reached via `kubectl port-forward`)
 
 ## Phase 1 — Kubernetes Local: Core Concepts `[LOCAL]`
 > Understand core Kubernetes with hands-on practice
