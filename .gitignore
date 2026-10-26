@@ -1,0 +1,27 @@
+# Env & secrets (sesuai Conventions: hanya *.example yang boleh di-commit)
+.env
+.env.*
+!.env.example
+**/secret.yaml
+**/secrets.yaml
+*.pem
+*.key
+kubeconfig*
+
+# Terraform (Phase 6-7)
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.tfvars.example
+.terraform.tfstate.lock.info
+
+# Helm
+charts/*.tgz
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

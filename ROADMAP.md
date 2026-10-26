@@ -5,19 +5,18 @@ Phases 0–6 run entirely on a local k3d cluster (free). All paid AWS work is gr
 ## Phase 0 — Setup & App `[LOCAL]`
 > Reproducible local cluster + the app that will be deployed in every later phase
 
-- [ ] Install k3d, kubectl, Helm
-- [ ] k3d config file (`k3d cluster create --config`) — 1 server + 2 agents, Traefik disabled, API on `127.0.0.1`, pinned k3s version
-- [ ] Add the local registry to the k3d config (`dev-registry.localhost:5000`)
-- [ ] Verify: `kubectl cluster-info` & `kubectl get nodes` (3 nodes Ready)
-- [ ] Build a minimal FastAPI app — `/` and `/healthz` endpoints
-- [ ] Containerize it — Dockerfile, versioned tag (`:v0.1.0`), non-root user
-- [ ] Push the image to the k3d registry and confirm the cluster can pull it (first Pod `Running`, reached via `kubectl port-forward`)
+- [x] Install k3d, kubectl, Helm
+- [x] k3d config file (`k3d cluster create --config`) — 1 server + 2 agents, Traefik disabled, API on `127.0.0.1`, pinned k3s version
+- [x] Add the local registry to the k3d config (`dev-registry.localhost:5000`)
+- [x] Verify: `kubectl cluster-info` & `kubectl get nodes` (3 nodes Ready)
+- [ ] Pick a sample app image (`traefik/whoami`, pinned tag) — the real app lives in a separate repo, this repo is infra only
+- [ ] Re-tag and push the image to the k3d registry (`docker pull` → `docker tag` → `docker push`) and confirm the cluster can pull it (first Pod `Running`, reached via `kubectl port-forward`)
 
 ## Phase 1 — Kubernetes Local: Core Concepts `[LOCAL]`
 > Understand core Kubernetes with hands-on practice
 
 - [ ] Pod, Node, Cluster — difference from plain Docker containers
-- [ ] First YAML manifest: deploy a simple Pod (your FastAPI image) — `k8s/pod.yaml`, `apply` is idempotent
+- [ ] First YAML manifest: deploy a simple Pod (the sample app image) — `k8s/pod.yaml`, `apply` is idempotent
 - [ ] kubectl debugging from day one — `logs`, `describe`, `exec`, `get events`
 - [ ] Labels & Selectors — the glue that connects Deployment → Pod → Service
 - [ ] Deployment & ReplicaSet 
@@ -39,7 +38,7 @@ Phases 0–6 run entirely on a local k3d cluster (free). All paid AWS work is gr
 > Resources, health checks, autoscaling, storage, scheduling, traffic routing
 
 - [ ] Resource requests & limits — QoS classes (Guaranteed/Burstable/BestEffort), what `OOMKilled` means
-- [ ] Startup, liveness & readiness probe — using the app's `/healthz`
+- [ ] Startup, liveness & readiness probe — using the sample app's health endpoint
 - [ ] Metrics Server (bundled with k3s) & `kubectl top`
 - [ ] Horizontal Pod Autoscaler (HPA) — why it needs `requests` to work
 - [ ] Persistent Volume & PVC
@@ -65,18 +64,18 @@ Phases 0–6 run entirely on a local k3d cluster (free). All paid AWS work is gr
 ## Phase 4 — Monitoring & Custom Helm Chart `[LOCAL]`
 > Package the app with Helm and monitor the cluster
 
-- [ ] Build a custom Helm chart — FastAPI Todo API
+- [ ] Build a custom Helm chart for the sample app (swap in the separate-repo app image later)
 - [ ] Deploy app via `helm install` to the dev namespace
 - [ ] Multi-environment: `values-dev.yaml` (1 replica, HPA off) + `values-prod.yaml` (3 replicas, HPA on)
 - [ ] Deploy Prometheus + Grafana via Helm (`kube-prometheus-stack`)
-- [ ] Scrape FastAPI metrics — expose `/metrics` + ServiceMonitor
+- [ ] Scrape app metrics — ServiceMonitor (needs an app exposing `/metrics`, from the separate app repo)
 - [ ] Build a simple Grafana dashboard
 
 ## Phase 5 — CI & GitOps `[LOCAL]`
 > Automate build and deployment like a real company — without paying for a cluster
 
-- [ ] GitHub Actions — build & push image to GHCR on git push (tag = version / commit SHA)
-- [ ] Scan the image with Trivy in CI — fail the pipeline on critical vulnerabilities
+- [ ] (App repo) GitHub Actions — build & push image to GHCR on git push (tag = version / commit SHA)
+- [ ] (App repo) Scan the image with Trivy in CI — fail the pipeline on critical vulnerabilities
 - [ ] Validate manifests / Helm chart in CI (`helm lint`, kubeconform)
 - [ ] ArgoCD on k3d — cluster auto-syncs from Git
 - [ ] Multi-environment with ArgoCD (dev/staging/prod)

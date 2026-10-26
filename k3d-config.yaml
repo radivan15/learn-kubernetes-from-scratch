@@ -1,0 +1,27 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: dev-cluster
+servers: 1
+agents: 2
+image: rancher/k3s:v1.35.5-k3s1
+
+# Alamat API server yang diekspos ke laptopmu
+kubeAPI:
+  hostIP: "127.0.0.1"             # ini mencegah masalah host.docker.internal
+  hostPort: "6550"                # port tetap, supaya tidak acak tiap recreate
+
+# Argumen tambahan yang diteruskan ke proses k3s
+options:
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik    # jangan install add-on Traefik bawaan
+        nodeFilters:
+          - server:*              # hanya untuk node server (control plane yang memasang add-on)
+
+# Registry lokal: k3d membuat container registry dan menghubungkannya ke semua node
+registries:
+  create:
+    name: dev-registry.localhost   # nama DNS registry di dalam jaringan k3d
+    host: "0.0.0.0"
+    hostPort: "5000"               # port di laptopmu untuk push image
