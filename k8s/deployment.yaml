@@ -1,0 +1,22 @@
+apiVersion: apps/v1         # Deployment ada di group "apps", bukan core "v1" seperti Pod
+kind: Deployment
+metadata:
+  name: whoami
+  labels:
+    app: whoami             # label milik objek Deployment itu sendiri
+spec:
+  replicas: 2               # desired state: selalu 2 Pod
+  selector:                 # "Pod mana yang jadi tanggung jawabku?"
+    matchLabels:
+      app: whoami           # WAJIB cocok dengan template.metadata.labels di bawah
+  template:                 # cetakan Pod, isinya hampir sama dengan pod.yaml-mu
+    metadata:
+      labels:
+        app: whoami
+        env: dev
+    spec:
+      containers:
+        - name: whoami
+          image: dev-registry.localhost:5000/whoami:v1.12.0
+          ports:
+            - containerPort: 80

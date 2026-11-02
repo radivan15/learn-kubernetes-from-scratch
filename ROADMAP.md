@@ -19,7 +19,7 @@ Phases 0–6 run entirely on a local k3d cluster (free). All paid AWS work is gr
 - [x] First YAML manifest: deploy a simple Pod (the sample app image) — `k8s/pod.yaml`, `apply` is idempotent
 - [x] kubectl debugging from day one — `logs`, `describe`, `exec`, `get events`
 - [x] Labels & Selectors — the glue that connects Deployment → Pod → Service
-- [ ] Deployment & ReplicaSet 
+- [x] Deployment & ReplicaSet 
 - [ ] Rolling Update & Rollback — `kubectl rollout status`, `kubectl rollout undo`
 - [ ] Service — ClusterIP, NodePort, LoadBalancer
 - [ ] Namespace — isolate dev/staging environments
