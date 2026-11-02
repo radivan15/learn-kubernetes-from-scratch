@@ -15,9 +15,9 @@ Phases 0–6 run entirely on a local k3d cluster (free). All paid AWS work is gr
 ## Phase 1 — Kubernetes Local: Core Concepts `[LOCAL]`
 > Understand core Kubernetes with hands-on practice
 
-- [ ] Pod, Node, Cluster — difference from plain Docker containers
-- [ ] First YAML manifest: deploy a simple Pod (the sample app image) — `k8s/pod.yaml`, `apply` is idempotent
-- [ ] kubectl debugging from day one — `logs`, `describe`, `exec`, `get events`
+- [x] Pod, Node, Cluster — difference from plain Docker containers
+- [x] First YAML manifest: deploy a simple Pod (the sample app image) — `k8s/pod.yaml`, `apply` is idempotent
+- [x] kubectl debugging from day one — `logs`, `describe`, `exec`, `get events`
 - [ ] Labels & Selectors — the glue that connects Deployment → Pod → Service
 - [ ] Deployment & ReplicaSet 
 - [ ] Rolling Update & Rollback — `kubectl rollout status`, `kubectl rollout undo`

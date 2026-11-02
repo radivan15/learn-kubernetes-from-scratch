@@ -1,0 +1,10 @@
+apiVersion: v1          
+kind: Pod               
+metadata:
+  name: whoami          # nama Pod, harus unik di dalam namespace
+spec:                   # "desired state": apa yang kamu mau
+  containers:
+    - name: whoami                                        # nama container di dalam Pod
+      image: dev-registry.localhost:5000/whoami:v1.12.0   # tag di-pin, jangan :latest
+      ports:
+        - containerPort: 80   # sifatnya dokumentasi; tidak membuka port ke luar

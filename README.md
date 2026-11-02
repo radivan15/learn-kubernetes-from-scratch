@@ -2,7 +2,7 @@
 
 Hands-on Kubernetes learning journey, from core concepts to cloud deployment.
 
-> Status: in progress
+> Status: **Phase 1 — Core Concepts** (in progress) · Phase 0 done
 
 ---
 
@@ -50,6 +50,8 @@ By the end of this project:
 ├── README.md
 ├── ROADMAP.md
 ├── k3d-config.yaml      # local cluster definition (1 server + 2 agents, registry)
+├── k8s/
+│   └── pod.yaml         # first manifest: whoami Pod pulled from the local registry
 └── docs/
     ├── debugging.md
     └── troubleshooting.md
@@ -75,6 +77,35 @@ Delete it when done (the config file recreates it identically):
 ```powershell
 k3d cluster delete dev-cluster
 ```
+
+---
+
+## Usage
+
+Deploy the sample app as a single Pod (`apply` is idempotent — running it again reports `unchanged`):
+
+```powershell
+kubectl apply -f k8s/pod.yaml
+kubectl get pods -o wide
+```
+
+```
+NAME     READY   STATUS    RESTARTS   AGE   IP          NODE                       NOMINATED NODE   READINESS GATES
+whoami   1/1     Running   0          12s   10.42.1.4   k3d-dev-cluster-server-0   <none>           <none>
+```
+
+The `whoami` image is built `FROM scratch` (no shell), so `kubectl exec -- sh` fails. Debug it with an ephemeral container instead:
+
+```powershell
+kubectl debug -it whoami --image=busybox:1.37 --target=whoami
+# inside: ps aux ; wget -qO- localhost:80
+```
+
+---
+
+## What I learned
+
+- **Phase 1 — Pods & debugging:** a Pod is one "logical host" — its containers share one IP, hostname and `localhost`, so a debug container can reach the app on `localhost:80`. Pod IPs live on the cluster overlay network and aren't reachable from the laptop without `port-forward` or a Service. Minimal (`scratch`) images have no shell by design, which shrinks the attack surface; `kubectl debug` with an ephemeral container is the way in — and since ephemeral containers can't be removed, the Pod is replaced rather than repaired. Also noticed that k3s schedules workloads on the control-plane node because it isn't tainted by default.
 
 ---
 
